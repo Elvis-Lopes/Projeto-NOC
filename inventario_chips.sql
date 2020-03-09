@@ -120,4 +120,20 @@ CREATE TABLE `inventario_chips`.`chips` (
   `Titular do Chip` VARCHAR(15) NOT NULL DEFAULT 'Surf Telecom',
   PRIMARY KEY (`id_chip`));
   
-  select * 
+ DELIMITER $$
+USE `inventario_chips`$$
+CREATE DEFINER = CURRENT_USER TRIGGER `inventario_chips`.`chips_BEFORE_INSERT` BEFORE INSERT ON `chips` FOR EACH ROW
+BEGIN
+	insert into `backup_inventario_chips`.`chips` values(
+		null,
+		new.id_chip,
+        new.operadora,
+        new.ddd,
+        new.msisdn,
+        new.iccid,
+        new.status,
+        new.data_de_expiração,
+        new.titular_do_chip
+    );
+END$$
+DELIMITER ;
